@@ -18,17 +18,17 @@ int main(int argc, char* argv[])
     //   take a look at the graphics/opengl set of examples, which uses EGL instead.
     consoleInit(NULL);
 
-    // Configure our supported input layout: a single player with standard controller styles
-    padConfigureInput(1, HidNpadStyleSet_NpadStandard);
+    // Configure our supported input layout: two player with standard controller styles
+    padConfigureInput(2, HidNpadStyleSet_NpadStandard);
 
-    // Initialize the default gamepad (which reads handheld mode inputs as well as the first connected controller)
+    // Initialize the gamepads 
     PadState pad;
-    padInitializeDefault(&pad);
+    padInitializeAny(&pad);
 
     Result rc=0;
     s32 i;
     s32 total_entries;
-    HidsysUniquePadId unique_pad_ids[2]={0};
+    HidsysUniquePadId unique_pad_ids[4]={0};
     HidsysNotificationLedPattern pattern;
 
     printf("notification-led example\n");
@@ -113,8 +113,8 @@ int main(int argc, char* argv[])
 
             // Get the UniquePadIds for the specified controller, which will then be used with hidsysSetNotificationLedPattern*.
             // If you want to get the UniquePadIds for all controllers, you can use hidsysGetUniquePadIds instead.
-            rc = hidsysGetUniquePadsFromNpad(padIsHandheld(&pad) ? HidNpadIdType_Handheld : HidNpadIdType_No1, unique_pad_ids, 2, &total_entries);
-            printf("hidsysGetUniquePadsFromNpad(): 0x%x", rc);
+            rc = hidsysGetUniquePadIds(unique_pad_ids, 4, &total_entries);
+            printf("hidsysGetUniquePadIds(): 0x%x", rc);
             if (R_SUCCEEDED(rc)) printf(", %d", total_entries);
             printf("\n");
 
